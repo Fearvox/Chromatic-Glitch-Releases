@@ -55,6 +55,15 @@ graph TD
     OG --> Out[Audio Output]
 ```
 
+## Channel Vocoder DSP Architecture
+
+Chromatic Glitch integrates a true 32-band Channel Vocoder inspired by classic hardware designs (with DSP concepts adapted from [yu2924/ChannelVocoder](https://github.com/yu2924/ChannelVocoder)).
+
+- **Core Mechanism**: It splits both the **Carrier** (instrumental synth) and **Modulator** (vocal input) across a dense 32-band filter bank.
+- **Envelope Following**: Within each of the 32 discrete frequency bands, an envelope follower tracks the volume contour of the Modulator and uses it to dynamically control the VCA gain of the corresponding Carrier band.
+- **Spectral Morphing**: The outputs of all 32 Carrier bands are summed together. This results in the vocal tract's spectral envelope being effectively superimposed onto the instrument's harmonic structure.
+- **Filter Design**: The filter bank utilizes cascaded 2nd-order Bandpass filters (biquads) for steep, precise frequency isolation to avoid phase smearing while maximizing articulation.
+
 ## Control Guide
 
 ### Input Section

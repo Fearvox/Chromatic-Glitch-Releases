@@ -55,6 +55,15 @@ graph TD
     OG --> Out[Audio Output 音频输出]
 ```
 
+## 通道声码器架构 (Channel Vocoder DSP)
+
+Chromatic Glitch 内置了一个真正的 32 频段通道声码器，其设计灵感来自于经典的硬件声码器结构 (核心数字信号处理概念借鉴了 [yu2924/ChannelVocoder](https://github.com/yu2924/ChannelVocoder) 的开源研究)。
+
+- **核心机制**：它使用高精度的滤波器组，将 **载波 (Carrier, 即乐器输入)** 与 **调制器 (Modulator, 即人声输入)** 各自分隔为密集的 32 个独立频段。
+- **动态包络跟随**：在每一个离散的频段内，包络跟随器 (Envelope Follower) 会实时追踪人声调制器的音量起伏变化，并使用该曲线动态控制对应乐器载波频段的 VCA 增益。
+- **频谱轮廓映射**：最终，所有 32 个载波频段的音频输出会被重新 Summing (混合)。这样做的完美结果，就是将人声声道的发音频谱轮廓（口型形状）不可思议地叠加到了合成乐器的谐波结构之上。
+- **滤波器设计**：滤波器组由级联的二阶带通滤波器 (Cascaded 2nd-order Bandpass filters) 构成，可在避免严重相位频散的前提下，提供陡峭且极度精准的频率隔离，从而最大化歌词发音的清晰度。
+
 ## 控制指南 (Control Guide)
 
 ### 输入部分 (Input Section)
