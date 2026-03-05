@@ -1,5 +1,7 @@
 # 🎛️ Chromatic Glitch — Creative Audio Plugin
 
+[English](README.md) | [简体中文](README_zh.md)
+
 <p align="center">
   <strong>A creative audio effect plugin for glitch, vocoder, and distortion processing.</strong><br>
   一款专为故障音效、声码器和失真处理设计的创意音频效果插件。<br>
