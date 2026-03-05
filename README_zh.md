@@ -1,6 +1,6 @@
 # 🎛️ Chromatic Glitch — 创意音频效果插件
 
-[English](README.md) | [简体中文](README_zh.md)
+[English](README.md) | [简体中文](README_zh.md) | [快速上手指南 (激活说明)](#快速上手指南-激活说明)
 
 <p align="center">
   <strong>一款专为故障音效、声码器和失真处理设计的创意音频效果插件。</strong><br>
