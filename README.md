@@ -1,139 +1,107 @@
-# 🎛️ Chromatic Glitch — Creative Audio Plugin
-
-[English](README.md) | [简体中文](README_zh.md) | [Quick Start (Activation)](#quick-start-activation)
+# Chromatic Glitch
 
 <p align="center">
   <strong>A creative audio effect plugin for glitch, vocoder, and distortion processing.</strong><br>
-  一款专为故障音效、声码器和失真处理设计的创意音频效果插件。<br>
+  一款专为故障音效、声码器和失真处理设计的创意音频效果插件。<br><br>
+  <em>Built with JUCE 8 | VST3 & AU | macOS</em><br>
+  <em>由 Vox — Zonic Design Production 开发</em>
 </p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Platform-macOS-black?style=for-the-badge&logo=apple" alt="macOS">
-  <img src="https://img.shields.io/badge/Format-VST3%20%7C%20AU-blue?style=for-the-badge" alt="Formats">
-  <img src="https://img.shields.io/badge/Framework-JUCE%208-green?style=for-the-badge" alt="JUCE 8">
-</p>
-
-**Chromatic Glitch** is a professional audio plugin engineered by **Vox — Zonic Design Production**. It combines three powerful engines into a single, cohesive sound design toolkit: a buffer-based glitch engine, a 32-band channel vocoder, and a multi-algorithm distortion stage.
-
-If you are looking for an instrument of controlled chaos to shatter and rearrange audio in real-time, this is it.
-
-[Website & Demo Download](https://chromatic-glitch-web.vercel.app) · [Report an Issue](mailto:legal@zonicdesign.com)
 
 ---
 
-## Highlights
+## Overview / 概述
 
-- **Glitch Engine** — Buffer-based stutter, reverse, and half-speed tape effects perfectly synced to your DAW's tempo.
-- **Vocoder/Comb Engine** — Morph seamlessly between a pristine 32-band pure channel vocoder and a dense, resonant comb filter bank.
-- **Distortion Algorithms** — 8 unique drive circuits expanding from warm Tube styling to brutal Bitcrushing.
-- **Focus EQ Architecture** — Isolate the exact frequency band you want to destroy, leaving the rest of your mix untouched.
-- **Hardware-locked Security** — RSA-2048 cryptographic mechanisms bind your license to your unique studio setup.
+Chromatic Glitch is a professional audio plugin combining three powerful engines:
+Chromatic Glitch 是一款专业音频插件，结合三大强力引擎：
 
----
+- **Glitch Engine / 故障引擎** — Buffer-based stutter, reverse, and half-speed effects with BPM sync / 基于缓冲的断续、反转和半速效果，支持 BPM 同步
+- **Vocoder/Comb Engine / 声码器/梳状引擎** — 32-band channel vocoder and comb filter bank / 32 频段通道声码器和梳状滤波器组
+- **Distortion / 失真** — 8 unique modes from tape saturation to germanium fuzz / 8 种独特模式，从磁带饱和到锗二极管失真
+- **Sidechain Input / 侧链输入** — Use external audio as a carrier for the vocoder to achieve "colorbass" pitch mapping / 使用外部音频作为声码器载波，实现“colorbass”音高映射
 
-## Signal Routing
+## Feature Focus: Sidechain Vocoding / 特色功能：侧链声码器
 
-The plugin uses a unique "Focus EQ" architecture, allowing you to target effects to a specific frequency band while keeping the rest of the signal dry.
+Chromatic Glitch supports an external sidechain input for the Vocoder engine.
+Chromatic Glitch 的声码器引擎支持外部侧链输入。
 
-```mermaid
-graph TD
-    In[Audio Input] --> IG[Input Gain]
-    IG --> Split{Focus EQ Split?}
-    Split -- Enabled --> Focus[Focus Band / Filtered]
-    Split -- Enabled --> Bypass[Bypass Band / Dry]
-    Split -- Disabled --> Focus[Full Signal]
-    
-    subgraph "Processing Chain (Focus Only)"
-        Focus --> GE[Glitch Engine]
-        GE --> VE[Vocoder / Comb Engine]
-        VE --> DIST[Distortion]
-    end
-    
-    DIST --> Sum[Summing Mixer]
-    Bypass --> Sum
-    Sum --> OG[Output Level]
-    OG --> Out[Audio Output]
+1. **Route Audio**: Send a MIDI-triggered chord synth or any melodic source to the plugin's "Sidechain" input.
+   **路由音频**：将 MIDI 触发的和弦合成器或任何旋律源发送至插件的“侧链”输入。
+2. **Switch Mode**: Set the plugin to **Vocoder** mode.
+   **切换模式**：将插件设置为 **Vocoder** 模式。
+3. **Enjoy Colorbass**: The sidechain signal will act as the carrier, while your main track acts as the modulator.
+   **尽享 Colorbass**：侧链信号将作为载波，而您的主轨道将作为调制器。
+
+## Building from Source / 从源码构建
+
+```bash
+mkdir cmake-build-debug && cd cmake-build-debug
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+cmake --build . -j $(sysctl -n hw.logicalcpu)
 ```
 
-## Channel Vocoder DSP Architecture
+The plugin will be automatically installed to your system's plugin directories.
+插件将自动安装到系统的插件目录中。
 
-Chromatic Glitch integrates a true 32-band Channel Vocoder inspired by classic hardware designs (with DSP concepts adapted from [yu2924/ChannelVocoder](https://github.com/yu2924/ChannelVocoder)).
-
-- **Core Mechanism**: It splits both the **Carrier** (instrumental synth) and **Modulator** (vocal input) across a dense 32-band filter bank.
-- **Envelope Following**: Within each of the 32 discrete frequency bands, an envelope follower tracks the volume contour of the Modulator and uses it to dynamically control the VCA gain of the corresponding Carrier band.
-- **Spectral Morphing**: The outputs of all 32 Carrier bands are summed together. This results in the vocal tract's spectral envelope being effectively superimposed onto the instrument's harmonic structure.
-- **Filter Design**: The filter bank utilizes cascaded 2nd-order Bandpass filters (biquads) for steep, precise frequency isolation to avoid phase smearing while maximizing articulation.
-
-## Control Guide
-
-### Input Section
-
-- **INPUT**: Controls the incoming signal level before processing.
-- **FOCUS EQ (Button)**: Activates the frequency-split mode.
-- **FREQ**: Sets the center frequency of the focus band.
-- **WIDTH (Q)**: Sets the width/resonance of the focus band.
-
-### Glitch Engine
-
-- **MODE**: `Stutter` (repetitive chopping), `Reverse` (reverse buffer play), `Half-Speed` (tape-like slowdown).
-- **RATE**: Speed of the glitching effect.
-- **MIX**: Dry/Wet control for the glitch engine.
-- **BPM SYNC**: Syncs the Rate to your DAW's tempo.
-
-### Color / Vocoder Engine
-
-- **ENGINE MODE**: Switch between **Comb Bank** and **32-Band Vocoder**.
-- **COLOR / MORPH**: Controls filter resonance (Comb mode) or spectral clarity and brightness (Vocoder mode).
-- **ATTACK / RELEASE**: Envelope follower speed for the vocoder.
-- **SHIFT**: Shifts frequency bands for formant-shifting effects.
-- **CARRIER / MOD / NOISE**: Independent mix controls for internal vocoder components.
-
-### Output Section
-
-- **DRIVE ALGORITHM**: 8 modes including Soft Sat, Bitcrush, and Germanium Fuzz.
-- **DRIVE**: Controls the intensity of the distortion.
-- **OUTPUT**: Final volume control.
-
----
-
-## Quick Start (Activation)
-
-1. Open your DAW and instantiate **Chromatic Glitch** on a track.
-2. The UI will display a **Machine ID** unique to your hardware configuration.
-3. Click the **REGISTER** button in the top right corner.
-4. Provide the Machine ID to the developer to receive your unique `Activation Code`.
-5. Paste the code back into the plugin to unlock the full version.
-
-> **Note on Privacy:** Your Machine ID is a mathematically generated hash based on your system's hardware configuration. It contains no personal data and is completely safe to share.
-
-### Demo Mode Restrictions
-
-Until activated, the plugin operates in Demo Mode:
-
-- **Glitch Mode**: Locked to "Stutter".
-- **Distortion Mode**: Restricted to Soft Sat, Wavefold, and Germanium.
-- **Vocoder**: Parameter adjustments are limited.
-- **UI Overlay**: A watermark is displayed on the interface.
-
----
-
-## License & Security Statement
+## License / 许可协议
 
 Chromatic Glitch is proprietary software developed by **Vox — Zonic Design Production**.
+Chromatic Glitch 是由 **Vox — Zonic Design Production** 开发的专有软件。
 
-> **⚠️ WARNING: Software piracy is a serious crime.**
+### Terms of Use / 使用条款
+
+1. **Single-Machine License / 单机授权**: Each license is tied to one hardware device via a unique Machine ID. / 每个许可证通过唯一机器 ID 绑定至一台硬件设备。
+2. **Non-Transferable / 不可转让**: Licenses may not be transferred, shared, sold, or sublicensed. / 许可证不得转让、共享、出售或再授权。
+3. **No Modification / 禁止修改**: Reverse engineering, decompilation, disassembly, or any attempt to derive the source code is strictly prohibited. / 严禁逆向工程、反编译、反汇编或任何试图推导源代码的行为。
+4. **No Redistribution / 禁止再分发**: You may not distribute the plugin binary, license files, or activation codes to any third party. / 不得向任何第三方分发插件二进制文件、许可文件或激活码。
+
+### Anti-Piracy Statement / 反盗版声明
+
+> **⚠️ WARNING: Software piracy is a serious crime. / 警告：软件盗版是严重的违法行为。**
 >
 > Chromatic Glitch uses **RSA-2048 cryptographic hardware-locked licensing**. Each copy is uniquely tied to the user's machine.
-> Any attempt to crack, patch, bypass, or circumvent the activation system constitutes a violation of the **DMCA**, **CFAA**, and other applicable intellectual property laws.
 >
-> **Zonic Design Production will actively pursue all legal remedies available**, including seeking statutory damages up to **$150,000 per infringement** (17 U.S.C. § 504). Distributing cracked copies exposes the distributor to contributory and vicarious copyright infringement liability.
+> Chromatic Glitch 使用 **RSA-2048 加密硬件锁定授权**。每份副本都唯一绑定到用户的机器。
+>
+> **Any attempt to crack, patch, bypass, or circumvent the activation system constitutes a violation of:**
+>
+> **任何试图破解、补丁、绕过或规避激活系统的行为均违反以下法律：**
+>
+> - The **Digital Millennium Copyright Act (DMCA)** (17 U.S.C. § 1201) / 《数字千年版权法》
+> - The **Computer Fraud and Abuse Act (CFAA)** (18 U.S.C. § 1030) / 《计算机欺诈和滥用法》
+> - The **EU Copyright Directive** (Article 6 & 7) / 《欧盟版权指令》第 6 和第 7 条
+> - Applicable local copyright and intellectual property laws / 适用的当地版权和知识产权法律
+>
+> **Zonic Design Production will actively pursue all legal remedies available**, including but not limited to:
+>
+> **Zonic Design Production 将积极追究所有可用的法律救济**，包括但不限于：
+>
+> - Filing DMCA takedown requests / 提交 DMCA 下架请求
+> - Pursuing civil damages for copyright infringement / 追究版权侵权民事赔偿
+> - Reporting criminal violations to law enforcement / 向执法机构举报刑事违法行为
+> - Seeking statutory damages up to **$150,000 per infringement** (17 U.S.C. § 504) / 寻求每次侵权最高 **$150,000** 的法定赔偿
+>
+> **Distributing cracked copies exposes the distributor to contributory and vicarious copyright infringement liability.**
+>
+> **分发破解副本将使分发者承担共同侵权和替代侵权责任。**
+>
+> If you discover unauthorized copies, please report to: **<legal@zonicdesign.com>**
+>
+> 如发现未经授权的副本，请举报至：**<legal@zonicdesign.com>**
 
-If you discover unauthorized copies or security vulnerabilities, please responsibly disclose to: **<security@zonicdesign.com>**
+### Responsible Disclosure / 负责任的信息披露
 
-## Credits
+If you discover a security vulnerability in the licensing system, please contact **<security@zonicdesign.com>** before disclosing publicly.
 
-- **Developer**: Vox — Zonic Design Production
-- **Framework**: [JUCE](https://juce.com)
-- **Audio DSP**: Custom C++ implementations
+如果您发现授权系统中的安全漏洞，请在公开披露之前联系 **<security@zonicdesign.com>**。
+
+## Credits / 致谢
+
+- **Developer / 开发者**: Vox — Zonic Design Production
+- **Framework / 框架**: [JUCE](https://juce.com) (GPLv3 / Commercial)
+- **Audio DSP / 音频 DSP**: Custom implementations / 自定义实现
+
+---
 
 *© 2026 Vox — Zonic Design Production. All rights reserved. Unauthorized reproduction or distribution is prohibited by law.*
+
+*© 2026 Vox — Zonic Design Production. 版权所有。未经授权的复制或分发均属违法行为。*
