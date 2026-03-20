@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/Framework-JUCE%208-green?style=for-the-badge" alt="JUCE 8">
 </p>
 
-**Chromatic Glitch** is a professional audio plugin developed by **Vox — Zonic Design Production**. It combines three powerful engines into a single cohesive sound design toolkit: a buffer-based Glitch engine, a 32-band channel vocoder, and a multi-algorithm distortion unit.
+**Chromatic Glitch** is a professional audio plugin developed by **Vox — Zonic Design Production**. It combines three powerful engines into a single cohesive sound design toolkit: a buffer-based Glitch engine, a 16-band channel vocoder, and a multi-algorithm distortion unit.
 
 [Visit Website & Download Demo](https://chromatic-glitch-web.vercel.app) · [Report Issues](mailto:legal@zonicdesign.com)
 
@@ -25,7 +25,7 @@
 - **Vocoder/Comb Engine** — Seamlessly morph between a pristine 32-band classic channel vocoder and a dense, resonant comb filter bank. **Now supporting external sidechain carrier input**.
 - **Distortion Algorithms** — 8 unique drive circuits ranging from warm analog saturation to brutal digital bitcrushing. (Beta v0.0.1.2: Stabilized DSP routing).
 - **Focus EQ Architecture** — Isolate exact frequency bands for targeted destruction without losing mix clarity.
-- **Hardware-Locked Security** — Advanced RSA-2048 cryptographic locking ties your license securely to your unique studio environment.
+- **Hardware-Locked Security** — Cryptographic hardware-locked challenge-response activation ties your license securely to your unique studio environment.
 
 ---
 
@@ -55,10 +55,10 @@ graph TD
 
 ## Channel Vocoder DSP (v0.0.1.2)
 
-Chromatic Glitch features a true 32-band channel vocoder designed for high-resolution vocal synthesis.
+Chromatic Glitch features a true 16-band channel vocoder designed for high-resolution vocal synthesis.
 
 - **External Sidechain (New)**: Support for external carrier signals. Route a synth (like Serum) to the sidechain input to let your vocals "play" the synth spectrum for authentic **Colorbass** sounds. (v0.0.1.2)
-- **Spectrum Mapping**: An array of 32 cascaded 2nd-order bandpass filters extracts the spectral envelope of the modulator and maps it onto the carrier signal.
+- **Spectrum Mapping**: An array of 16 cascaded 2nd-order bandpass filters extracts the spectral envelope of the modulator and maps it onto the carrier signal.
 - **Formant Shifting**: The **SHIFT** control allows for real-time frequency-band translation, creating iconic formant-shifting vocal effects.
 - **Optimization**: Recent updates include pointer-stable parameter caching for enhanced UI rendering performance. Fixed V-Wide UI overlap in v0.0.1.2.
 
